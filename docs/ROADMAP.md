@@ -55,8 +55,10 @@ Release gate: one Python implementation serves supported agent surfaces, without
 | 13 | [#14 Rules-first routing and explicit escalation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/14) | P1 | Local/deterministic first, no hidden paid calls |
 | 14 | [#15 GitHub issue batch triage + dedupe](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/15) | P1 | Incremental compact reports via existing GitHub tools |
 | 15 | [#16 Conditional PC-off fallback evaluation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/16) | P2 | Activate only with demonstrated need and approved costs |
+| 16 | [#17 Task-aware repository context packs](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/17) | P1 | Reuse Repomix/Aider/indexer to create a bounded, reproducible issue-aware pack |
+| 17 | [#18 Cross-agent handoff adapter](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/18) | P1 | Reuse existing handoff package; verify commit/tests/privacy when switching agents |
 
-Release gate: demonstrate reproducible size/cost reduction on real-like, privacy-safe fixtures; report accuracy tradeoffs and model-use assumptions. Customer/customer-account connectors stay owned by provider apps.
+Release gate: demonstrate reproducible size/cost reduction on real-like, privacy-safe fixtures; report accuracy tradeoffs and model-use assumptions. Customer/customer-account connectors stay owned by provider apps. **Research basis:** [evaluated extension candidates](RESEARCH_EXTENSIONS.md), including existing tools to reuse rather than reimplement.
 
 ## Dependencies and parallelization
 
@@ -69,6 +71,8 @@ Release gate: demonstrate reproducible size/cost reduction on real-like, privacy
            #9 + #11 ──> #12 Optional REST/OpenAPI decision
            #6 + #11 + #13 ──> #14 Router ──> #15 Batch triage
            #9 + #10 + #14 ──> #16 Optional PC-off fallback
+           #2 + #3 + #4 ──> #17 Context pack
+           #2 + #4 + #13 ──> #18 Cross-agent handoff
 ```
 
 The critical path to **ChatGPT/Claude remote access** is #2 → #3 → #4 and #7 → #8 → #9 → #10. Cache/stats work (#5/#6) can progress in parallel after safety contracts stabilize.
@@ -85,5 +89,7 @@ The critical path to **ChatGPT/Claude remote access** is #2 → #3 → #4 and #7
 ## Scope control
 
 Do **not** add an entire alternative plugin platform, IDE, orchestrator, database, hosted GPU stack, OAuth implementation, GitHub/Notion client or custom MCP protocol. Start with official integrations. Features requiring recurring hosting expense, additional cloud billing or exposing the home machine need separate review before activation.
+
+**Candidate screening:** Integrate native hooks into #13, affected-test selection into #4, model evals into #14, and token accounting into #6 instead of opening duplicate tasks. Two independently valuable features—#17 and #18—were added after [open-source comparison](RESEARCH_EXTENSIONS.md).
 
 **Next actionable task:** [#2 — Harden registry contracts and MCP compatibility](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2), then [#3](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) and [#4](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4).
