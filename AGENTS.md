@@ -15,3 +15,7 @@ Prefer deterministic Python tools over LLM inference whenever practical. This pr
 - Add tests for code changes and run `pytest`. Avoid network, GPU, heavy optional dependencies in core tests.
 
 Integration setup, supported surfaces and security caveats: [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md). For project structure see [CLAUDE.md](CLAUDE.md).
+
+## Reuse first
+
+Before adding a tool or plugin, check [docs/REUSE_POLICY.md](docs/REUSE_POLICY.md). Use installed GitHub, Notion, Gmail, Calendar, Drive and job-search connectors for their existing capabilities. Prefer wrapping an existing Python operation through `aiops.registry` over writing a second implementation. Do not build another MCP protocol implementation or provider client when the official SDK/connector already exists.
