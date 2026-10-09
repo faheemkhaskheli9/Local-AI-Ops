@@ -1,6 +1,6 @@
 # Local AI Ops: System Design
 
-Status: proposed (v0.3 target) · Owner: Faheem Khaskheli · Last updated: 2026-10-09
+Status: evolving design; shared registry and schema exporters implemented, remote gateway pending · Last updated: 2026-10-09
 
 ## 1. Goal
 
@@ -260,10 +260,12 @@ tests/ tests/golden/
 
 ## 8. Roadmap
 
-1. **v0.3 (registry):** `registry.py`, move existing tools onto `@tool`, golden tests, `aiops stats`.
-2. **v0.4 (remote):** HTTP MCP + bearer auth + sandbox + Cloudflare Tunnel guide → ChatGPT and claude.ai connected.
-3. **v0.5 (reach):** REST/OpenAPI for Custom GPTs, function-calling export, `SKILL.md`.
-4. **v0.6 (more tools):** chosen from `aiops stats` and the chats you repeat most.
+The **current prioritized release plan, dependencies, and issue links** live in [ROADMAP.md](ROADMAP.md); GitHub issues are the only task-status source.
+
+- **v0.3:** existing registry/export code needs hardening, CI, accurate cache keys, and privacy-safe metrics.
+- **v0.4:** file sandbox, authorization, SDK-based Streamable HTTP MCP, and verified remote client setup.
+- **v0.5:** safe native tool-calling examples, portable client configs; REST/OpenAPI only if an actual gap is documented.
+- **v0.6:** measurable routing and batch workflows using existing connectors, with optional PC-off fallback only when justified.
 
 ## 9. What to revisit as it grows
 - Multi-user (sharing with others): per-user tokens, OAuth, separate caches.
