@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Personal data: never commit
+config.yaml
+*.db
+cvs/
+data/
+briefs/
+.env

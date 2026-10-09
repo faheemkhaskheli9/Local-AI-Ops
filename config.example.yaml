@@ -1,0 +1,51 @@
+# Job pipeline config (aiops jobs). Copy to config.yaml and edit.
+# Anything you leave out uses the default.
+
+db_path: jobpipe.db
+
+search:
+  terms: ["machine learning engineer", "LLM engineer", "AI engineer"]
+  locations: ["Netherlands", "Germany", "Belgium"]
+  sites: ["indeed", "linkedin"]   # keep LinkedIn volume low
+  results_per_search: 20
+  hours_old: 72
+
+filters:
+  reject_title: ["intern", "internship", "werkstudent", "phd", "student"]
+  reject_languages: ["german", "dutch", "french"]   # only when *required*
+  allow_language_if_optional: true                   # "German is a plus" is fine
+  target_companies_csv: data/target_companies.csv    # columns: company,status
+  ind_sponsors_csv: null                             # data/ind_sponsors.csv, column: name
+
+# CV versions: name -> keywords. Most hits wins; ties go to `default`.
+cv_versions:
+  llm: [llm, rag, langchain, llamaindex, agent, agents, retrieval, genai, openai, embedding, mcp]
+  ml: [computer vision, pytorch, tensorflow, segmentation, detection, yolo, opencv, time series, mlops]
+  default: general
+  min_hits: 2
+
+skills: [python, pytorch, tensorflow, llm, rag, langchain, llamaindex, fastapi,
+         docker, aws, azure, gcp, computer vision, opencv, yolo, transformers,
+         hugging face, mlflow, airflow, sql, nlp, agents]
+
+scoring:
+  threshold: 0.45
+  embedding_model: null            # e.g. BAAI/bge-small-en-v1.5 (pip install .[embeddings])
+  cv_text_files: {}                # {llm: cvs/llm.txt, ml: cvs/ml.txt, general: cvs/general.txt}
+
+ollama:
+  enabled: false                   # true after: ollama pull qwen2.5:7b
+  model: qwen2.5:7b
+  seed: 42
+
+notion:
+  enabled: false
+  database_id: null                # token comes from the NOTION_TOKEN env var
+  properties:                      # rename to match your database columns
+    title: Role
+    company: Company
+    url: URL
+    status: Status
+    score: Fit Score
+    cv: CV Version
+    location: Location
