@@ -100,6 +100,10 @@ facts = llm.local(f"Extract the dates:\n{text}", schema={"type": "object", ...})
 def slow_step(x): ...
 ```
 
+## Architecture
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full system design: how ChatGPT and Claude connect, security, caching and roadmap.
+
 ## Add a new tool
 
 See [CLAUDE.md](CLAUDE.md). In short: one module per area, a pure function, a test, a CLI command, and an MCP tool if Claude should call it.
