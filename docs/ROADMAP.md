@@ -19,11 +19,11 @@
 
 | Order | Issue | Priority | Definition of done |
 | --- | --- | --- | --- |
-| 1 | [#2 Registry contracts + MCP SDK compatibility](../issues/2) | P0 | Seven-tool parity and MCP startup smoke tests |
-| 2 | [#3 Bounded dispatch + structured errors](../issues/3) | P0 | Invalid/oversized calls rejected before execution |
-| 3 | [#4 Golden tests + GitHub Actions CI](../issues/4) | P0 | Clean checkout validates tests and package |
-| 4 | [#5 File/model-aware cache invalidation](../issues/5) | P1 | Edited files and model changes never serve stale results |
-| 5 | [#6 Usage telemetry and token baseline](../issues/6) | P1 | Privacy-safe hit rate, latency and *estimated* savings |
+| 1 | [#2 Registry contracts + MCP SDK compatibility](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2) | P0 | Seven-tool parity and MCP startup smoke tests |
+| 2 | [#3 Bounded dispatch + structured errors](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) | P0 | Invalid/oversized calls rejected before execution |
+| 3 | [#4 Golden tests + GitHub Actions CI](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4) | P0 | Clean checkout validates tests and package |
+| 4 | [#5 File/model-aware cache invalidation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/5) | P1 | Edited files and model changes never serve stale results |
+| 5 | [#6 Usage telemetry and token baseline](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/6) | P1 | Privacy-safe hit rate, latency and *estimated* savings |
 
 Release gate: `pytest` and package smoke tests pass on CI; existing CLI/MCP behavior remains compatible; schemas are stable; no sensitive input is logged. **Already implemented registry/export code is hardening work, not a new rewrite.**
 
@@ -31,10 +31,10 @@ Release gate: `pytest` and package smoke tests pass on CI; existing CLI/MCP beha
 
 | Order | Issue | Priority | Definition of done |
 | --- | --- | --- | --- |
-| 6 | [#7 Filesystem sandbox + remote allowlist](../issues/7) | P0 | Traversal/symlink escapes blocked; explicit tool opt-in |
-| 7 | [#8 Authentication, scopes, limits](../issues/8) | P0 | Unauthorized clients denied; auth method matches client |
-| 8 | [#9 Official Streamable HTTP MCP adapter](../issues/9) | P0 | Remote discovery/call works with official MCP SDK |
-| 9 | [#10 Secure deployment + client smoke checklist](../issues/10) | P1 | TLS, secret handling, rollback and verified client steps |
+| 6 | [#7 Filesystem sandbox + remote allowlist](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/7) | P0 | Traversal/symlink escapes blocked; explicit tool opt-in |
+| 7 | [#8 Authentication, scopes, limits](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/8) | P0 | Unauthorized clients denied; auth method matches client |
+| 8 | [#9 Official Streamable HTTP MCP adapter](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/9) | P0 | Remote discovery/call works with official MCP SDK |
+| 9 | [#10 Secure deployment + client smoke checklist](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/10) | P1 | TLS, secret handling, rollback and verified client steps |
 
 Release gate: never expose unauthenticated local-file tools; all remote tools deny by default; a remotely connected test client can call only authorized read-only capabilities. No publishing tunnel URLs or real tokens in Git.
 
@@ -42,9 +42,9 @@ Release gate: never expose unauthenticated local-file tools; all remote tools de
 
 | Order | Issue | Priority | Definition of done |
 | --- | --- | --- | --- |
-| 10 | [#11 Native OpenAI/Anthropic function-call executor](../issues/11) | P1 | Shared registry dispatch; bounded offline loop tests |
-| 11 | [#13 Portable skills + setup/doctor checks](../issues/13) | P1 | Client config templates validated, no copied business logic |
-| 12 | [#12 Conditional REST/OpenAPI evaluation](../issues/12) | P2 | Implement only if a confirmed client gap requires it |
+| 10 | [#11 Native OpenAI/Anthropic function-call executor](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/11) | P1 | Shared registry dispatch; bounded offline loop tests |
+| 11 | [#13 Portable skills + setup/doctor checks](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/13) | P1 | Client config templates validated, no copied business logic |
+| 12 | [#12 Conditional REST/OpenAPI evaluation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/12) | P2 | Implement only if a confirmed client gap requires it |
 
 Release gate: one Python implementation serves supported agent surfaces, without duplicate provider clients. REST/OpenAPI remains optional; prefer MCP when supported.
 
@@ -52,9 +52,9 @@ Release gate: one Python implementation serves supported agent surfaces, without
 
 | Order | Issue | Priority | Definition of done |
 | --- | --- | --- | --- |
-| 13 | [#14 Rules-first routing and explicit escalation](../issues/14) | P1 | Local/deterministic first, no hidden paid calls |
-| 14 | [#15 GitHub issue batch triage + dedupe](../issues/15) | P1 | Incremental compact reports via existing GitHub tools |
-| 15 | [#16 Conditional PC-off fallback evaluation](../issues/16) | P2 | Activate only with demonstrated need and approved costs |
+| 13 | [#14 Rules-first routing and explicit escalation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/14) | P1 | Local/deterministic first, no hidden paid calls |
+| 14 | [#15 GitHub issue batch triage + dedupe](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/15) | P1 | Incremental compact reports via existing GitHub tools |
+| 15 | [#16 Conditional PC-off fallback evaluation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/16) | P2 | Activate only with demonstrated need and approved costs |
 
 Release gate: demonstrate reproducible size/cost reduction on real-like, privacy-safe fixtures; report accuracy tradeoffs and model-use assumptions. Customer/customer-account connectors stay owned by provider apps.
 
@@ -86,4 +86,4 @@ The critical path to **ChatGPT/Claude remote access** is #2 → #3 → #4 and #7
 
 Do **not** add an entire alternative plugin platform, IDE, orchestrator, database, hosted GPU stack, OAuth implementation, GitHub/Notion client or custom MCP protocol. Start with official integrations. Features requiring recurring hosting expense, additional cloud billing or exposing the home machine need separate review before activation.
 
-**Next actionable task:** [#2 — Harden registry contracts and MCP compatibility](../issues/2), then [#3](../issues/3) and [#4](../issues/4).
+**Next actionable task:** [#2 — Harden registry contracts and MCP compatibility](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2), then [#3](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) and [#4](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4).
