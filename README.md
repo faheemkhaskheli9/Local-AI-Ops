@@ -115,3 +115,29 @@ See [CLAUDE.md](CLAUDE.md). In short: one module per area, a pure function, a te
 ## License
 
 MIT
+
+## Shared tools for OpenAI, Anthropic and MCP
+
+The seven existing MCP tools now come from a single registry (`aiops.registry` and
+`aiops.tool_catalog`). The original Python implementations and provider
+integrations are **reused**, not recreated.
+
+Export API function-call schemas without running any models or services:
+
+```bash
+python -m aiops.export openai > openai-tools.json
+python -m aiops.export openai-chat > openai-chat-tools.json
+python -m aiops.export anthropic > anthropic-tools.json
+```
+
+Call the same existing functions from a trusted local executor:
+
+```python
+from aiops.registry import dispatch
+result = dispatch("count_tokens", {"text": "A compact context"})
+```
+
+The exporter produces schemas only; **it does not automatically register tools
+in ChatGPT or Claude**. Local MCP remains `aiops mcp`. All catalog tools
+are blocked from remote dispatch by default. See
+[plugin and tool reuse policy](docs/REUSE_POLICY.md) before adding new ones.
