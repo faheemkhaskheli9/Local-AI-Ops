@@ -102,7 +102,7 @@ def slow_step(x): ...
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full system design: how ChatGPT and Claude connect, security, caching and roadmap.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the prioritized plan and linked GitHub issues (the canonical task tracker), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design, and [docs/REUSE_POLICY.md](docs/REUSE_POLICY.md) for the no-duplicate-tools rule.
 
 ## Add a new tool
 
