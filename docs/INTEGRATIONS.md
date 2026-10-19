@@ -1,6 +1,6 @@
 # Use AI Ops from ChatGPT, Claude, Codex and your own agents
 
-This repository already provides an MCP stdio adapter: `aiops mcp`. It exposes `file_to_text`, `compact_text`, `count_tokens`, `text_diff`, `job_check`, `srt_to_chapters`, and `local_llm`. The same core logic also runs from the `aiops` CLI and from Python imports.
+This repository already provides an MCP stdio adapter: `aiops mcp`. It exposes `file_to_text`, `compact_text`, `count_tokens`, `text_diff`, `job_check`, `srt_to_chapters`, `local_llm`, `kb_plan`, and `kb_validate`. The same core logic also runs from the `aiops` CLI and from Python imports.
 
 **Strategy:** use Python for deterministic transforms, Ollama for inexpensive local classification/extraction, and ChatGPT/Claude for complex decisions. Avoid sending untrimmed PDFs, full job descriptions, SRT files, and repeat prompts to expensive LLMs.
 

@@ -55,7 +55,7 @@ With the MCP server, Claude calls a tool like `file_to_text` instead of reading 
   ```
   Restart Claude Desktop.
 
-Tools: `file_to_text`, `compact_text`, `count_tokens`, `text_diff`, `job_check`, `srt_to_chapters`, `local_llm`.
+Tools: `file_to_text`, `compact_text`, `count_tokens`, `text_diff`, `job_check`, `srt_to_chapters`, `local_llm`, `kb_plan`, `kb_validate`.
 
 ## Examples
 
@@ -119,7 +119,7 @@ MIT
 
 ## Shared tools for OpenAI, Anthropic and MCP
 
-The seven existing MCP tools now come from a single registry (`aiops.registry` and
+The shared MCP tools come from a single registry (`aiops.registry` and
 `aiops.tool_catalog`). The original Python implementations and provider
 integrations are **reused**, not recreated.
 

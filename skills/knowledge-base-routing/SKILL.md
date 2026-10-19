@@ -21,7 +21,7 @@ aiops kb plan "Build a secure clinical RAG API"
 aiops kb validate "Clinical RAG" evidence.json --as-of 2026-10-19
 ```
 
-Evidence is a JSON array of `{ "repository": "owner/name", "path": "folder/topic.md", "retrieved": true, "last_verified": "YYYY-MM-DD" }`. Fill it from files actually read during this session; the date is optional. Validation checks scoped repositories, paths, topical-file coverage and stale metadata. **It cannot independently verify whether GitHub retrieval occurred or whether facts are true.**
+Evidence is a JSON array of `{ "repository": "owner/name", "path": "folder/topic.md", "retrieved": true, "last_verified": "YYYY-MM-DD" }`. Fill it from files actually read during this session; the date is optional. Validation checks scoped repositories, paths, non-index file coverage and stale metadata. **It cannot independently verify whether GitHub retrieval occurred or whether facts are true.**
 
 Both `kb_plan` and `kb_validate` are available through the existing `aiops` tool registry (MCP and function schema exports). Neither talks to GitHub, creates network access or bypasses connector permissions.
 
