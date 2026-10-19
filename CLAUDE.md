@@ -24,3 +24,12 @@ This repo holds deterministic tools that save LLM tokens. Read this before worki
 - Python 3.10+, standard library first, type hints.
 - Never commit personal data: CVs, configs, databases, keys. See `.gitignore`.
 - Run `pytest` before committing.
+
+
+## Shared knowledge bases
+
+Use [skills/knowledge-base-routing/SKILL.md](skills/knowledge-base-routing/SKILL.md)
+for task-aware AI/engineering/security/medical KB references. Run
+`aiops kb plan "TASK"` to select repos and use the existing GitHub
+integration to read the matched topic files. The private Personal KB
+requires explicit opt-in, and the planner is not live retrieval.

@@ -9,6 +9,8 @@
     aiops yt thumb IMAGE OUT                   1280x720 JPEG under 2 MB
     aiops llm local "prompt" [--schema f.json] cached local model call
     aiops jobs ...                             job pipeline (see aiops jobs -h)
+    aiops kb plan "TASK"                       select GitHub KB references (offline)
+    aiops kb validate "TASK" evidence.json     check retrieval evidence (offline)
     aiops cache clear [NS]                     clear cached results
     aiops mcp                                  run MCP server for Claude
 """
@@ -26,6 +28,9 @@ def _read(path: str) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["kb"]:
+        from aiops.kb import main as kb_main
+        return kb_main(argv[1:])
     if argv[:1] == ["jobs"]:
         from aiops.jobs.cli import main as jobs_main
         return jobs_main(argv[1:])

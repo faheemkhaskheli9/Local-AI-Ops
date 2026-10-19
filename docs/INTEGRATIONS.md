@@ -137,3 +137,29 @@ Reference documentation:
 - https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities
 - https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop
 - https://py.sdk.modelcontextprotocol.io/
+
+
+## Cross-agent GitHub knowledge bases
+
+The portable [KB skill](../skills/knowledge-base-routing/SKILL.md) describes
+the same retrieval discipline for Codex, Claude Code and ChatGPT. Local-AI-Ops
+adds only deterministic source selection and metadata checks:
+
+```bash
+aiops kb plan "Secure clinical RAG API"
+aiops kb validate "Clinical RAG" evidence.json
+python -m pytest -q tests/test_kb.py tests/test_registry.py
+```
+
+Use installed GitHub connector actions or `gh` for actual file retrieval,
+following the selected repo's current default branch and fetching topic
+content rather than only README/INDEX. `kb_plan` and `kb_validate`
+are available through the existing MCP/registry adapters. Neither grants
+remote access or proves that a cited file was read.
+
+**ChatGPT:** GitHub connectivity and Project instructions must be enabled
+by the user; a GitHub repo cannot force ChatGPT to access it in all chats.
+Copy instructions from the public
+[router](https://github.com/faheemkhaskheli9/AI-Knowledge-Base/blob/main/CHATGPT-KB-ROUTER.md)
+into a ChatGPT Project for consistent task guidance. Private Personal KB
+access must not be assumed.

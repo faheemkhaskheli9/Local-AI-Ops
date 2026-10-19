@@ -19,3 +19,14 @@ Integration setup, supported surfaces and security caveats: [docs/INTEGRATIONS.m
 ## Reuse first
 
 Before adding a tool or plugin, check [docs/REUSE_POLICY.md](docs/REUSE_POLICY.md). Use installed GitHub, Notion, Gmail, Calendar, Drive and job-search connectors for their existing capabilities. Prefer wrapping an existing Python operation through `aiops.registry` over writing a second implementation. Do not build another MCP protocol implementation or provider client when the official SDK/connector already exists.
+
+
+## Relevant knowledge bases
+
+For questions involving AI, engineering, security or clinical domains, use the
+[portable KB routing skill](skills/knowledge-base-routing/SKILL.md) and
+`aiops kb plan "TASK"` to select references. Fetch actual topic files via
+the connected GitHub tool: routing output alone is not evidence. Require
+explicit authorization for the private Personal KB. Do not claim repo access
+without fetching it; validate dynamic medical/security/AI facts with primary
+sources. Neither `kb_plan` nor `kb_validate` communicates with GitHub.

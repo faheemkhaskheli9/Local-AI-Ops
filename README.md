@@ -18,6 +18,7 @@ A growing toolbox of plain Python and local AI tools that take repeatable work a
 | `aiops.youtube` | local Whisper transcription (EN/UR) → SRT, chapters, 1280×720 thumbnails | `aiops yt transcribe video.mp4` |
 | `aiops.jobs` | job pipeline: collect, dedupe, visa/language filters, pick CV, fit score, short LLM brief, Notion sync | `aiops jobs run` |
 | `aiops.mcp_server` | exposes the tools to Claude Desktop / Claude Code | `aiops mcp` |
+| `aiops.kb` | offline multi-repo KB routing + evidence/freshness checks (uses existing GitHub connectors for retrieval) | `aiops kb plan "clinical RAG"` |
 
 ## Setup (step by step)
 
@@ -141,3 +142,22 @@ The exporter produces schemas only; **it does not automatically register tools
 in ChatGPT or Claude**. Local MCP remains `aiops mcp`. All catalog tools
 are blocked from remote dispatch by default. See
 [plugin and tool reuse policy](docs/REUSE_POLICY.md) before adding new ones.
+
+
+## Portable knowledge-base routing
+
+Use [skills/knowledge-base-routing/SKILL.md](skills/knowledge-base-routing/SKILL.md)
+with Codex or Claude Code, or paste the linked ChatGPT Project instructions.
+The router covers AI, software engineering, cybersecurity and medical topics;
+the private Personal KB requires explicit opt-in and authorized access.
+
+```bash
+aiops kb plan "Build a secure clinical RAG API"
+aiops kb validate "Clinical RAG" evidence.json
+```
+
+The `kb_plan` and `kb_validate` functions also appear in the shared MCP
+and OpenAI/Anthropic tool schemas. They operate offline; **they do not fetch
+GitHub, install a ChatGPT plugin or guarantee live access**. Retrieve full
+topic files with an existing authorized GitHub connector and check citations
+against files actually read. See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md).

@@ -8,7 +8,8 @@ from aiops.registry import dispatch, get_tool, list_tools, tool
 
 
 EXPECTED = {"file_to_text", "compact_text", "count_tokens", "text_diff",
-            "job_check", "srt_to_chapters", "local_llm"}
+            "job_check", "srt_to_chapters", "local_llm",
+            "kb_plan", "kb_validate"}
 
 
 def test_catalog_reuses_exact_existing_mcp_tools():
@@ -24,7 +25,7 @@ def test_export_openai_and_anthropic_share_schemas():
     assert [x["name"] for x in oa] == [x["name"] for x in an]
     assert oa[0]["parameters"] == an[0]["input_schema"]
     assert cc[0]["function"]["name"] == oa[0]["name"]
-    assert len(oa) == 7
+    assert len(oa) == 9
     assert json.loads(json.dumps(oa)) == oa
 
 
@@ -71,3 +72,19 @@ def test_registry_rejects_duplicate_and_bad_tier():
         tool(name="foo", tier="internet")
     with pytest.raises(ValueError):
         tool(name="count_tokens")(lambda text: None)
+
+
+
+def test_kb_tools_available_in_shared_registry_and_private_off():
+    plan = dispatch("kb_plan", {"task": "Clinical RAG"})
+    assert [entry["id"] for entry in plan["routes"]] == ["ai", "medical"]
+    assert not plan["retrieval_performed"]
+    checked = dispatch("kb_validate", {
+        "task": "LLM",
+        "evidence": [{"repository": "faheemkhaskheli9/AI-Knowledge-Base",
+                      "path": "concepts/transformers.md", "retrieved": True}],
+        "as_of": "2026-10-19",
+    })
+    assert checked["ok"] and not checked["verified_retrieval"]
+    with pytest.raises(PermissionError):
+        dispatch("kb_plan", {"task": "LLM"}, remote=True)

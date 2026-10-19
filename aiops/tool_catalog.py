@@ -63,3 +63,20 @@ def local_llm(prompt: str, schema: dict | None = None) -> str | dict:
     """Run the existing cached local Ollama integration for basic extraction."""
     from aiops.core import llm
     return llm.local(prompt, schema=schema)
+
+
+@tool(name="kb_plan")
+def kb_plan(task: str, include_private: bool = False) -> dict:
+    """Select relevant knowledge bases without fetching GitHub content."""
+    from aiops.kb import route
+    return route(task, include_private=include_private)
+
+
+@tool(name="kb_validate")
+def kb_validate(task: str, evidence: list[dict],
+                include_private: bool = False,
+                as_of: str | None = None) -> dict:
+    """Audit supplied KB file evidence (does not prove repository access)."""
+    from aiops.kb import validate
+    return validate(task, evidence, include_private=include_private,
+                    as_of=as_of)
