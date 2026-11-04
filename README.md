@@ -1,5 +1,10 @@
 # Local AI Ops
 
+![python](https://img.shields.io/badge/python-3.10%2B-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+![local first](https://img.shields.io/badge/runs-locally-brightgreen)
+![MCP](https://img.shields.io/badge/MCP-server-purple)
+
 A growing toolbox of plain Python and local AI tools that take repeatable work away from ChatGPT and Claude.
 
 - **Faster:** a script runs in milliseconds; a chat takes minutes.
@@ -7,6 +12,8 @@ A growing toolbox of plain Python and local AI tools that take repeatable work a
 - **Same output every time:** rules instead of guesses; local models run at temperature 0 with a fixed seed; every result is cached.
 
 > **The rule:** if you asked an LLM to do the same mechanical thing twice, turn it into a function here. Keep paid LLMs for judgment and writing.
+
+⭐ **If this saves you tokens, please star the repo.** It helps others find it.
 
 ## What's inside
 
