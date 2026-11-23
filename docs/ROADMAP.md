@@ -1,95 +1,139 @@
-# Delivery roadmap (v0.3–v0.6)
+# Roadmap: improvement plan and future direction
 
-**Updated:** 2026-10-09 · **Branch policy:** commit directly to `main`; do not create branches/PRs unless explicitly requested.  
-**Canonical task tracker:** [GitHub issues](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues). This document is the **release plan and index**, not a second backlog. Issue state is the source of truth for actual progress.
+**Updated:** 2026-11-23 · **Branch policy:** commit directly to `main` unless a branch/PR is explicitly requested.  
+**Canonical task tracker:** [GitHub issues](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues). This file is the plan and index; issue state is the source of truth for progress.
 
-## Current baseline (already exists; do not rebuild)
+## 1. Vision: what this repo becomes
 
-- Deterministic text/document helpers, job screening, YouTube chapter utilities and cached Ollama integration.
-- Seven MCP stdio tools exposed from existing Python implementations.
-- Shared `aiops.registry` / `aiops.tool_catalog`, argument dispatch, and `aiops.export` OpenAI/Anthropic function-call schema exports.
-- `docs/ARCHITECTURE.md`, `docs/INTEGRATIONS.md`, `docs/REUSE_POLICY.md`, `AGENTS.md`.
-- Tests exist, but clean-install CI, end-to-end MCP compatibility, hardened remote security and measured token savings are **not yet verified**.
+**Today:** a personal toolbox of nine deterministic Python tools (text, docs, YouTube, jobs, KB routing, cached local LLM) reachable from the CLI, local MCP and exported function-call schemas.
 
-**Do not build a second GitHub, Notion, Google, jobs, Ollama, or MCP provider implementation.** Use installed platform plugins/official APIs/CLI and existing Python modules. Every new feature should identify an actual gap, alternatives considered, and acceptance tests.
-
-## Release plan and prioritized issues
-
-### v0.3 — Reliability and measurement (first)
-
-| Order | Issue | Priority | Definition of done |
-| --- | --- | --- | --- |
-| 1 | [#2 Registry contracts + MCP SDK compatibility](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2) | P0 | Seven-tool parity and MCP startup smoke tests |
-| 2 | [#3 Bounded dispatch + structured errors](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) | P0 | Invalid/oversized calls rejected before execution |
-| 3 | [#4 Golden tests + GitHub Actions CI](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4) | P0 | Clean checkout validates tests and package |
-| 4 | [#5 File/model-aware cache invalidation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/5) | P1 | Edited files and model changes never serve stale results |
-| 5 | [#6 Usage telemetry and token baseline](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/6) | P1 | Privacy-safe hit rate, latency and *estimated* savings |
-
-Release gate: `pytest` and package smoke tests pass on CI; existing CLI/MCP behavior remains compatible; schemas are stable; no sensitive input is logged. **Already implemented registry/export code is hardening work, not a new rewrite.**
-
-### v0.4 — Secure remote MCP (after safety gates)
-
-| Order | Issue | Priority | Definition of done |
-| --- | --- | --- | --- |
-| 6 | [#7 Filesystem sandbox + remote allowlist](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/7) | P0 | Traversal/symlink escapes blocked; explicit tool opt-in |
-| 7 | [#8 Authentication, scopes, limits](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/8) | P0 | Unauthorized clients denied; auth method matches client |
-| 8 | [#9 Official Streamable HTTP MCP adapter](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/9) | P0 | Remote discovery/call works with official MCP SDK |
-| 9 | [#10 Secure deployment + client smoke checklist](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/10) | P1 | TLS, secret handling, rollback and verified client steps |
-
-Release gate: never expose unauthenticated local-file tools; all remote tools deny by default; a remotely connected test client can call only authorized read-only capabilities. No publishing tunnel URLs or real tokens in Git.
-
-### v0.5 — Client portability without adapter duplication
-
-| Order | Issue | Priority | Definition of done |
-| --- | --- | --- | --- |
-| 10 | [#11 Native OpenAI/Anthropic function-call executor](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/11) | P1 | Shared registry dispatch; bounded offline loop tests |
-| 11 | [#13 Portable skills + setup/doctor checks](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/13) | P1 | Client config templates validated, no copied business logic |
-| 12 | [#12 Conditional REST/OpenAPI evaluation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/12) | P2 | Implement only if a confirmed client gap requires it |
-
-Release gate: one Python implementation serves supported agent surfaces, without duplicate provider clients. REST/OpenAPI remains optional; prefer MCP when supported.
-
-### v0.6 — Real workload optimization
-
-| Order | Issue | Priority | Definition of done |
-| --- | --- | --- | --- |
-| 13 | [#14 Rules-first routing and explicit escalation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/14) | P1 | Local/deterministic first, no hidden paid calls |
-| 14 | [#15 GitHub issue batch triage + dedupe](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/15) | P1 | Incremental compact reports via existing GitHub tools |
-| 15 | [#16 Conditional PC-off fallback evaluation](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/16) | P2 | Activate only with demonstrated need and approved costs |
-| 16 | [#17 Task-aware repository context packs](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/17) | P1 | Reuse Repomix/Aider/indexer to create a bounded, reproducible issue-aware pack |
-| 17 | [#18 Cross-agent handoff adapter](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/18) | P1 | Reuse existing handoff package; verify commit/tests/privacy when switching agents |
-
-Release gate: demonstrate reproducible size/cost reduction on real-like, privacy-safe fixtures; report accuracy tradeoffs and model-use assumptions. Customer/customer-account connectors stay owned by provider apps. **Research basis:** [evaluated extension candidates](RESEARCH_EXTENSIONS.md), including existing tools to reuse rather than reimplement.
-
-## Dependencies and parallelization
+**Target (v1.0):** a **local-first context gateway for AI agents**. Every agent (chat apps, coding agents, API scripts) calls it *before* spending paid tokens:
 
 ```text
-#2 Registry compatibility ──> #3 Safe dispatch ────────> #7 File sandbox
-           │                   │                       │
-           └──────> #4 CI      ├──────> #5 Cache        └──> #8 Auth ──> #9 HTTP MCP ──> #10 Deployment
-                               └──────> #6 Telemetry
-           #3 + #4 ──> #11 Native function calling ──> #13 Skills/doctor
-           #9 + #11 ──> #12 Optional REST/OpenAPI decision
-           #6 + #11 + #13 ──> #14 Router ──> #15 Batch triage
-           #9 + #10 + #14 ──> #16 Optional PC-off fallback
-           #2 + #3 + #4 ──> #17 Context pack
-           #2 + #4 + #13 ──> #18 Cross-agent handoff
+raw input ──> extract ──> compact / page ──> route (rules → local model → paid model)
+                │               │                    │
+                └──── content-hash cache ────────────┴──> measured savings report
 ```
 
-The critical path to **ChatGPT/Claude remote access** is #2 → #3 → #4 and #7 → #8 → #9 → #10. Cache/stats work (#5/#6) can progress in parallel after safety contracts stabilize.
+| Pillar | Means in practice |
+|---|---|
+| **One tool, every door** | A function declared once in the registry appears in CLI, MCP stdio/HTTP and function-call JSON. No hand-written adapters. |
+| **Trustworthy** | Golden tests, versioned outputs, content-hash cache keys, structured errors, sandboxed file access. |
+| **Measured** | `aiops stats` proves calls avoided, cache hit rate and bytes/tokens saved, instead of claiming them. |
+| **Safe remote** | Authenticated, read-only-by-default HTTP MCP so web/mobile clients can use home-PC tools. |
+| **Extensible** | Third-party "tool packs" install via Python entry points (`aiops-pack-*`) without editing this repo. |
+| **Distributable** | Published on PyPI, `pipx install aiops`, `aiops doctor` verifies a client setup in one command. |
 
-## Quality and review rules
+**Non-goals:** a second MCP protocol, provider clients (GitHub, Notion, Google), an agent runtime, multi-tenant SaaS, or hosted GPUs.
 
-1. **Reuse-first:** check installed plugins, GitHub/Notion/Google/Indeed service tools, `gh`, official SDKs, existing Python modules and open-source libraries before adding code. Record the gap in the issue/commit.
-2. **One logical change per commit directly to `main`.** Keep issues up to date and close only after acceptance criteria pass.
-3. **Security:** remote tiers deny by default; no unrestricted file reads, write/admin access, silent API billing, raw sensitive logs, or credentials in the repo.
-4. **Determinism:** rule-based transforms need stable tests; temperature-zero LLM output itself is *not* guaranteed deterministic. Distinguish cache replay and model identity.
-5. **Observability:** output size, estimated tokens saved, actual API usage when available, latency and error rates. Do not promise dollar savings without measured prices/usage.
-6. **Release checkpoints:** run offline tests, static checks, and integration tests relevant to the affected adapter. Write explicit manual smoke-test results for clients not covered in CI.
+## 2. Current state (audit, 2026-11-23)
 
-## Scope control
+Strengths: small clean core (~2.2k LOC), 40 offline tests passing, shared registry with type-checked dispatch, remote deny-by-default, clear reuse policy.
 
-Do **not** add an entire alternative plugin platform, IDE, orchestrator, database, hosted GPU stack, OAuth implementation, GitHub/Notion client or custom MCP protocol. Start with official integrations. Features requiring recurring hosting expense, additional cloud billing or exposing the home machine need separate review before activation.
+Gaps found in the code:
 
-**Candidate screening:** Integrate native hooks into #13, affected-test selection into #4, model evals into #14, and token accounting into #6 instead of opening duplicate tasks. Two independently valuable features—#17 and #18—were added after [open-source comparison](RESEARCH_EXTENSIONS.md).
+| # | Gap | Where | Fix in |
+|---|---|---|---|
+| G1 | **Planning outpaces shipping:** ~37 KB of plans vs ~2.2k LOC; 17 roadmap issues open, none closed | `docs/` | Section 3 rules |
+| G2 | CLI is still hand-written, so registry tools and CLI commands can drift | `aiops/cli.py` | #2 |
+| G3 | `dispatch` has no output cap, no timeout, raises raw Python errors | `aiops/registry.py` | #3 |
+| G4 | CI only triggers on KB file paths; no lint, type check or Python-version matrix | `.github/workflows/` | #4 |
+| G5 | `@cached` key ignores tool version; `None` results are never cached; `file_to_text` is keyed by path, not content | `aiops/core/cache.py`, `tool_catalog.py` | #5 |
+| G6 | Local LLM cache key has model *name*, not model *digest*; Ollama down gives a raw `URLError` | `aiops/core/llm.py` | #5, #3 |
+| G7 | No `aiops cache stats` / `aiops stats`; savings are unmeasured | `aiops/cli.py` | #6 |
+| G8 | `file_to_text` reads any local path | `tool_catalog.py` | #7 |
+| G9 | No tests for `mcp_server.build()`, `llm` (mocked), cache TTL, CLI `llm`/`yt` paths | `tests/` | #2, #4 |
+| G10 | Docs drift: "seven" tools in several docs (actual: nine); README sections after *License* | `docs/`, `README.md` | #21 |
+| G11 | Still `0.2.0`, no CHANGELOG, not on PyPI | `pyproject.toml` | v1.0 |
 
-**Next actionable task:** [#2 — Harden registry contracts and MCP compatibility](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2), then [#3](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) and [#4](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4).
+## 3. Working rules (to fix G1)
+
+1. **Ship before planning.** No new research/plan documents until v0.3 is released. New ideas go into a GitHub issue labelled `idea`, not a doc.
+2. **WIP limit of two:** at most two roadmap issues in progress at once.
+3. **Definition of done** = code + test + CLI/MCP exposure + README row + issue closed.
+4. **Release every milestone** with a version bump and CHANGELOG entry.
+5. Reuse-first and security rules from [REUSE_POLICY.md](REUSE_POLICY.md) still apply.
+
+## 4. Release plan
+
+### v0.3: trustworthy core (next; target ~2–3 weeks)
+
+| Order | Issue | Scope | Done when |
+|---|---|---|---|
+| 1 | [#4](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/4) CI + golden tests | Run on every push/PR; Python 3.10–3.13 matrix; `ruff` + `mypy --strict` on `aiops/core`, `registry`; `tests/golden/` fixtures | Clean checkout green; golden output change without version bump fails |
+| 2 | [#2](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/2) Registry contracts | Generate CLI subcommands for registry tools (`aiops tool <name> --arg`); MCP startup smoke test; schema snapshot test | One declaration drives CLI, MCP and exports |
+| 3 | [#3](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/3) Bounded dispatch | Input/output size caps, per-tier timeout, `{"error": {code, message, hint}}`, `OLLAMA_DOWN` code | Invalid, oversized or failing calls return structured errors |
+| 4 | [#5](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/5) Cache correctness | Key = tool + version + args + file sha256 + model digest; cache `None` via sentinel; optional TTL column; `aiops cache stats` | Edited file or new model never returns stale output |
+| 5 | [#6](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/6) Telemetry | SQLite call log (tool, ms, hit, chars in/out; no content); `aiops stats` | Hit rate and estimated savings visible after one day of use |
+
+Release gate: tag `v0.3.0`, CHANGELOG, docs say "nine tools" (or generate the count).
+
+### v0.4: safe remote access
+
+| Order | Issue | Done when |
+|---|---|---|
+| 6 | [#7](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/7) File sandbox + allowlist | `AIOPS_ALLOWED_DIRS`; `..`/symlink escapes blocked by tests |
+| 7 | [#8](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/8) Auth, scopes, limits | Bearer token, per-token rate limit, read/llm tiers only remotely |
+| 8 | [#9](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/9) Streamable HTTP MCP | `aiops serve --http` via official SDK; remote client can list and call allowed tools |
+| 9 | [#10](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/10) Deployment checklist | `deploy/` with tunnel + service files; smoke-test log for each web client |
+
+### v0.5: portability and packaging
+
+| Order | Issue | Done when |
+|---|---|---|
+| 10 | [#13](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/13) Skills + `aiops doctor` | One command validates Python, extras, Ollama, MCP config for each client |
+| 11 | [#11](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/11) Function-call executor | Bounded offline tool-loop tests for both API formats via shared `dispatch` |
+| 12 | New: tool-pack plugins | `aiops.packs` entry-point group; registry loads external packs; one example pack |
+| 13 | New: PyPI release | `pipx install aiops` works; trusted-publishing workflow |
+| 14 | [#12](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/12) REST/OpenAPI | Only if a confirmed client cannot use MCP |
+
+### v0.6: measurable token savings on real work
+
+| Order | Issue | Done when |
+|---|---|---|
+| 15 | [#17](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/17) Task-aware context packs | Bounded, reproducible pack for a repo + issue, reusing existing indexers |
+| 16 | [#14](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/14) Rules-first routing | Local eval fixtures decide when the local model is good enough; no hidden paid calls |
+| 17 | [#18](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/18) Agent handoff | Create/resume handoff across two agents with commit verification |
+| 18 | [#15](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/15) Batch issue triage | Incremental compact reports via existing GitHub tooling |
+| 19 | [#16](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/16) PC-off fallback | Only with demonstrated need and approved cost |
+
+### v1.0: stable platform
+
+- Stable tool schema and error contract (semver: breaking schema change = major bump).
+- Paged results (`next_cursor`) for every text tool.
+- Published benchmark: tokens/bytes saved on privacy-safe fixtures vs. raw input.
+- Docs generated from the registry (tool table in README, MCP tool list).
+- At least one external tool pack.
+
+## 5. Dependencies
+
+```text
+#4 CI ──> #2 Registry ──> #3 Dispatch ──> #5 Cache ──> #6 Stats ─────────────┐
+                              │                                                │
+                              └──> #7 Sandbox ──> #8 Auth ──> #9 HTTP ──> #10  │
+#2 + #3 ──> #11 Executor ──> #13 Doctor ──> packs ──> PyPI                     │
+#2 + #4 ──> #17 Context packs                       #6 + #11 ──> #14 Router ──┴──> #15, #16
+#2 + #13 ──> #18 Handoff
+```
+
+CI (#4) moves first: every later change then lands with a safety net.
+
+## 6. Success metrics
+
+| Metric | v0.3 | v1.0 |
+|---|---|---|
+| Roadmap issues closed | 5 | 19+ |
+| Test coverage (`aiops/core`, `registry`) | ≥ 85 % | ≥ 90 % |
+| Rule-based tool latency (p95) | < 200 ms | < 200 ms |
+| Cache hit rate on repeated work | measured | ≥ 50 % |
+| Estimated input reduction on fixtures | measured | ≥ 70 % |
+| Clients verified by `aiops doctor` | 0 | 4+ |
+
+## 7. Immediate next actions
+
+1. Fix CI triggers and add the version matrix + lint (#4).
+2. Fix the `@cached` `None`/version bugs and add content-hash keys (#5); small, high value.
+3. Generate CLI commands from the registry (#2).
+4. Close #19/#20 as `idea` or merge into existing issues to keep the backlog lean.
+
+Research background: [RESEARCH_EXTENSIONS.md](RESEARCH_EXTENSIONS.md). System design: [ARCHITECTURE.md](ARCHITECTURE.md).
