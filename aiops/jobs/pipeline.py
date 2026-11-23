@@ -25,8 +25,8 @@ def load_skip_companies(cfg: dict) -> set[str]:
         }
 
 
-def process(job: Job, cfg: dict, store: Store | None = None,
-            skip: set[str] | None = None, sponsors: set[str] | None = None) -> Job:
+def process(job: Job, cfg: dict, *, skip: set[str] | None = None,
+            sponsors: set[str] | None = None) -> Job:
     apply_filters(job, cfg, skip_companies=skip, ind_sponsors=sponsors)
     if job.status == "filtered_out":
         return job
@@ -41,7 +41,7 @@ def process(job: Job, cfg: dict, store: Store | None = None,
     if cfg["ollama"]["enabled"] and job.description:
         from .extract import extract
 
-        job.extracted = extract(job.description, cfg, store)
+        job.extracted = extract(job.description, cfg)
 
     job.status = "shortlist" if job.score >= cfg["scoring"]["threshold"] else "low_fit"
     return job
@@ -52,7 +52,7 @@ def run(store: Store, cfg: dict) -> dict[str, int]:
     sponsors = load_names(cfg["filters"].get("ind_sponsors_csv"), "name") or None
     counts: dict[str, int] = {}
     for job in store.by_status("new"):
-        process(job, cfg, store, skip, sponsors)
+        process(job, cfg, skip=skip, sponsors=sponsors)
         store.save(job)
         counts[job.status] = counts.get(job.status, 0) + 1
     return counts

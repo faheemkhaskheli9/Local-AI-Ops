@@ -15,10 +15,6 @@ CREATE TABLE IF NOT EXISTS jobs (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE IF NOT EXISTS llm_cache (
-    prompt_hash TEXT PRIMARY KEY,
-    response TEXT NOT NULL
-);
 """
 
 
@@ -61,16 +57,3 @@ class Store:
             args = statuses
         q += " ORDER BY created_at, url"
         return [Job.from_dict(json.loads(r[0])) for r in self.conn.execute(q, args)]
-
-    # Simple response cache so a repeated LLM call costs nothing.
-    def cached(self, prompt_hash: str) -> str | None:
-        row = self.conn.execute(
-            "SELECT response FROM llm_cache WHERE prompt_hash = ?", (prompt_hash,)
-        ).fetchone()
-        return row[0] if row else None
-
-    def cache(self, prompt_hash: str, response: str) -> None:
-        self.conn.execute(
-            "INSERT OR REPLACE INTO llm_cache VALUES (?, ?)", (prompt_hash, response)
-        )
-        self.conn.commit()

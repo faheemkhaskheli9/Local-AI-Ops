@@ -45,7 +45,7 @@ DEFAULTS: dict = {
     },
     "ollama": {
         "enabled": False,
-        "host": "http://localhost:11434",
+        "host": None,  # None: OLLAMA_HOST env var, else http://localhost:11434
         "model": "qwen2.5:7b",
         "seed": 42,
     },

@@ -30,7 +30,7 @@ JOB POST:
 {text}"""
 
 
-def extract(text: str, cfg: dict, store=None, max_chars: int = 6000) -> dict:
+def extract(text: str, cfg: dict, max_chars: int = 6000) -> dict:
     o = cfg["ollama"]
     return llm.local(PROMPT.format(text=text[:max_chars]), schema=SCHEMA,
-                     model=o["model"], seed=o["seed"])
+                     model=o["model"], seed=o["seed"], host=o.get("host"))

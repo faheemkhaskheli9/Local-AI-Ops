@@ -93,3 +93,31 @@ def test_process_and_brief(tmp_path):
 
 def test_trim_keeps_text_without_headings():
     assert trim_description("Just one paragraph.") == "Just one paragraph."
+
+
+def test_extract_uses_configured_ollama_host(monkeypatch, tmp_path):
+    from aiops.core import llm
+    from aiops.core.cache import Cache
+    from aiops.jobs import extract as ex
+
+    seen = []
+
+    def fake_post(url, body, headers, timeout=300):
+        seen.append(url)
+        return {"response": "{}"}
+
+    monkeypatch.setattr(llm, "_post", fake_post)
+    monkeypatch.setattr(llm, "default_cache", lambda: Cache(tmp_path / "c.db"))
+    cfg = {"ollama": {**CFG["ollama"], "host": "http://gpu-box:11434/"}}
+    ex.extract("Python developer", cfg)
+    cfg = {"ollama": {**CFG["ollama"], "host": None}}
+    ex.extract("Go developer", cfg)
+    assert seen == ["http://gpu-box:11434/api/generate",
+                    f"{llm.OLLAMA_HOST.rstrip('/')}/api/generate"]
+
+
+def test_store_has_no_unused_llm_cache(tmp_path):
+    store = Store(tmp_path / "j.db")
+    tables = {r[0] for r in store.conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'")}
+    assert tables == {"jobs"}

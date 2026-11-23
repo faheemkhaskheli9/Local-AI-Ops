@@ -28,8 +28,11 @@ def _post(url: str, body: dict, headers: dict, timeout: int = 300) -> dict:
 
 def local(prompt: str, *, schema: dict | None = None, system: str | None = None,
           model: str | None = None, seed: int = 42, cache: Cache | None = None,
-          use_cache: bool = True):
-    """Call a local Ollama model. Returns a dict when `schema` is given, else str."""
+          use_cache: bool = True, host: str | None = None):
+    """Call a local Ollama model. Returns a dict when `schema` is given, else str.
+
+    `host` overrides the OLLAMA_HOST environment variable for this call.
+    """
     body = {
         "model": model or OLLAMA_MODEL,
         "prompt": prompt,
@@ -44,7 +47,7 @@ def local(prompt: str, *, schema: dict | None = None, system: str | None = None,
     key = stable_hash(body)
     if use_cache and (hit := c.get("llm.local", key)) is not None:
         return hit
-    raw = _post(f"{OLLAMA_HOST.rstrip('/')}/api/generate", body, {})["response"]
+    raw = _post(f"{(host or OLLAMA_HOST).rstrip('/')}/api/generate", body, {})["response"]
     out = json.loads(raw) if schema else raw.strip()
     c.set("llm.local", key, out)
     return out
