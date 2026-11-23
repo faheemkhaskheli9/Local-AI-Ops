@@ -25,7 +25,7 @@
 
 ## Registry scope
 
-- `aiops.tool_catalog` wraps the seven **pre-existing MCP operations**; `aiops.registry` validates arguments and provides OpenAI/Anthropic schemas.
+- `aiops.tool_catalog` wraps the nine **existing operations** (`@tool` declarations); `aiops.registry` validates arguments and provides OpenAI/Anthropic schemas.
 - Local tools are `remote=False` by default. No remote server or public file access is enabled.
 - `aiops.export` emits tool definitions for an agent's own function-calling executor; it does **not** connect or install a provider plugin.
 - A tool proposal must state its existing alternative, the missing capability and why a wrapper cannot solve it.

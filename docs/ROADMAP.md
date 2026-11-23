@@ -37,7 +37,7 @@ Strengths: ~1.8k lines in `aiops/`, 40 offline tests passing, registry with stri
 | G3 | `max_tokens` unchecked: `0` disables the budget, negative values slice from the end | `aiops/text/ops.py:39,65` | #3 |
 | G4 | `dispatch` has no output cap or timeout and raises raw Python errors; Ollama down → raw `URLError`, bad schema JSON → raw `JSONDecodeError` | `aiops/registry.py:128`; `aiops/core/llm.py:47-48` | #3 |
 | G5 | `job_check` is tier `read` but can call an LLM when the config enables Ollama, and skips the skip-company/IND lists, so MCP verdicts differ from `aiops jobs run` | `aiops/tool_catalog.py:36-48`; `aiops/jobs/pipeline.py:28-30,50-55` | #2, #8 |
-| G6 | `html_to_text` drops everything inside `<form>`/`<header>`; pages wrapped in a `<form>` return empty text | `aiops/docs/extract.py:15,26-28` | needs issue (bug) |
+| G6 | `html_to_text` drops everything inside `<form>`/`<header>`; pages wrapped in a `<form>` return empty text | `aiops/docs/extract.py:15,26-28` | [#23](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/23) |
 
 ### Caching and determinism
 
@@ -47,7 +47,7 @@ Strengths: ~1.8k lines in `aiops/`, 40 offline tests passing, registry with stri
 | G8 | LLM cache key has model *name*, not digest, and omits `OLLAMA_HOST`; `use_cache=False` still writes | `aiops/core/llm.py:44-49` | #5 |
 | G9 | `stable_hash(default=str)` makes sets hash-seed dependent; `f(1)` and `f(x=1)` get different keys; `@cached` never stores `None` and ignores tool version | `aiops/core/cache.py:24,78-84` | #5 (before `@cached` is used) |
 | G10 | Non-deterministic inputs: `kb_validate` uses today's date when `as_of` is missing; `job_check` reads `config.yaml` from the working directory | `aiops/kb.py:113`; `aiops/tool_catalog.py:37` | #2 |
-| G11 | Dead duplicate cache: `Store.cached`, `llm_cache` table, unused `store` argument; config `ollama.host` ignored | `aiops/jobs/store.py:18,65-75`; `aiops/jobs/extract.py:33-35` | needs issue (cleanup) |
+| G11 | Dead duplicate cache: `Store.cached`, `llm_cache` table, unused `store` argument; config `ollama.host` ignored | `aiops/jobs/store.py:18,65-75`; `aiops/jobs/extract.py:33-35` | [#24](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/24) |
 
 ### Process, tests and docs
 
@@ -56,7 +56,7 @@ Strengths: ~1.8k lines in `aiops/`, 40 offline tests passing, registry with stri
 | G12 | CI runs only on KB/registry-catalog paths, Python 3.11 only; changes to `registry.py`, `core/`, `text/`, `docs/`, `jobs/`, `youtube/`, `pyproject.toml` never trigger it | `.github/workflows/kb-validation.yml` | #4 |
 | G13 | No tests for `mcp_server.build()`, `llm` (mocked), CLI `llm`/`yt` paths | `tests/` | #2, #4 |
 | G14 | CLI is hand-written; `aiops docs totext` does not compact by default while MCP `file_to_text` compacts to 4,000 tokens | `aiops/cli.py:81-82` | #2 |
-| G15 | Docs drift: "seven tools" (actual nine) in `REUSE_POLICY.md:28`, `RESEARCH_EXTENSIONS.md:14`; "#2–#16" in `RESEARCH_EXTENSIONS.md:15`; `CLAUDE.md` step 6 and `README.md` say to add MCP tools by hand in `mcp_server.py`; README sections after *License* | see files | needs issue (docs) |
+| G15 | Docs drift: "seven tools" (actual nine) in `REUSE_POLICY.md:28`, `RESEARCH_EXTENSIONS.md:14`; "#2–#16" in `RESEARCH_EXTENSIONS.md:15`; `CLAUDE.md` step 6 and `README.md` say to add MCP tools by hand in `mcp_server.py`; README sections after *License* | see files | [#25](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/25) |
 | G16 | 17 roadmap issues open, none closed; plans grow faster than code | issues #2–#18 | rule 1 below |
 | G17 | Version `0.2.0`, no CHANGELOG; `mypy --strict` on `aiops/core` + `registry.py` reports 11 errors; no `ruff`/`pytest-cov` in `dev` extra | `pyproject.toml` | #4 |
 
@@ -160,7 +160,7 @@ Targets are set **after** v0.3 produces baselines, never before.
 
 1. #2: route MCP through `dispatch` (G1) and add an MCP smoke test.
 2. #3: validate `max_tokens` and return structured errors (G3, G4).
-3. Open three small issues for G6 (HTML `<form>` bug), G11 (dead cache cleanup) and G15 (docs drift); fix G15 in one docs commit.
+3. Fix [#23](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/23) (HTML `<form>` bug) and [#24](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/24) (dead cache cleanup).
 4. Widen CI triggers to all paths (cheap first step of #4).
 
 System design: [ARCHITECTURE.md](ARCHITECTURE.md).

@@ -11,7 +11,7 @@
 - `aiops.jobs`: job discovery/filters/dedupe, score and CV routing.
 - `aiops.youtube`: transcription and subtitle-to-chapter operations.
 - `aiops.core`: SQLite cached Ollama / Anthropic calls.
-- `aiops.registry`, `aiops.tool_catalog`, `aiops.mcp_server`, `aiops.export`: seven existing tool wrappers, local stdio MCP, native provider schemas.
+- `aiops.registry`, `aiops.tool_catalog`, `aiops.mcp_server`, `aiops.export`: nine registered tool wrappers, local stdio MCP, native provider schemas.
 - Existing issues #2–#16 cover contract reliability, bounded dispatch, CI, cache, stats, secure HTTP MCP, native tool calls, packaging, routing, batch triage, optional cloud fallback.
 
 All proposals below must first confirm they cannot be achieved entirely in an installed plugin, SDK, or existing module. Favor thin adapters and pure local composition; don't rebuild provider platforms, repo search engines, or full agent runtimes.

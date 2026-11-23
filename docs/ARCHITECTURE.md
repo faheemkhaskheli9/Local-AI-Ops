@@ -122,7 +122,7 @@ flowchart TB
 
 ### 4.1 Tool Registry (the core idea)
 
-Today, `cli.py` and `mcp_server.py` each describe the tools separately. That will drift. Instead, every tool is declared **once**:
+Every tool is declared **once** with `@tool` (implemented in `aiops/registry.py`, declarations in `aiops/tool_catalog.py`); MCP and the function-call exports are generated from it. The CLI is still hand-written (roadmap G14). Target shape:
 
 ```python
 from aiops.registry import tool

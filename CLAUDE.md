@@ -16,7 +16,7 @@ This repo holds deterministic tools that save LLM tokens. Read this before worki
 3. Heavy dependencies are optional: import them inside the function and add them to an extra in `pyproject.toml`.
 4. If it calls a model, go through `aiops.core.llm` (temperature 0, seed, cache), or wrap it with `@cached`.
 5. Add a test in `tests/` that runs without network, GPU or optional extras.
-6. Add a CLI command in `aiops/cli.py`, and an MCP tool in `aiops/mcp_server.py` if Claude should call it.
+6. Add a CLI command in `aiops/cli.py`. To expose it to agents, declare a thin wrapper with `@tool` in `aiops/tool_catalog.py`; MCP and the OpenAI/Anthropic exports pick it up automatically.
 7. Add a row to the table in `README.md`.
 
 ## Conventions

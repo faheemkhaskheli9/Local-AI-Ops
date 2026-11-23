@@ -107,15 +107,11 @@ See [docs/ROADMAP.md](docs/ROADMAP.md) for the prioritized plan and linked GitHu
 
 ## Add a new tool
 
-See [CLAUDE.md](CLAUDE.md). In short: one module per area, a pure function, a test, a CLI command, and an MCP tool if Claude should call it.
+See [CLAUDE.md](CLAUDE.md). In short: one module per area, a pure function, a test, a CLI command, and a `@tool` wrapper in `aiops/tool_catalog.py` to expose it over MCP and function calling.
 
 ## Privacy
 
 `config.yaml`, `cvs/`, `data/`, `briefs/`, `*.db` and `.env` are git-ignored. Never commit CVs, keys or personal data.
-
-## License
-
-MIT
 
 ## Shared tools for OpenAI, Anthropic and MCP
 
@@ -161,3 +157,7 @@ and OpenAI/Anthropic tool schemas. They operate offline; **they do not fetch
 GitHub, install a ChatGPT plugin or guarantee live access**. Retrieve full
 topic files with an existing authorized GitHub connector and check citations
 against files actually read. See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md).
+
+## License
+
+MIT
