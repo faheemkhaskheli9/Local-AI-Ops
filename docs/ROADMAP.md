@@ -56,7 +56,7 @@ Strengths: ~1.8k lines in `aiops/`, 40 offline tests passing, registry with stri
 | G12 | CI runs only on KB/registry-catalog paths, Python 3.11 only; changes to `registry.py`, `core/`, `text/`, `docs/`, `jobs/`, `youtube/`, `pyproject.toml` never trigger it | `.github/workflows/kb-validation.yml` | #4 |
 | G13 | No tests for `mcp_server.build()`, `llm` (mocked), CLI `llm`/`yt` paths | `tests/` | #2, #4 |
 | G14 | CLI is hand-written; `aiops docs totext` does not compact by default while MCP `file_to_text` compacts to 4,000 tokens | `aiops/cli.py:81-82` | #2 |
-| G15 | Docs drift: "seven tools" (actual nine) in `REUSE_POLICY.md:28`, `RESEARCH_EXTENSIONS.md:14`; "#2–#16" in `RESEARCH_EXTENSIONS.md:15`; `CLAUDE.md` step 6 and `README.md` say to add MCP tools by hand in `mcp_server.py`; README sections after *License* | see files | [#25](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/25) |
+| G15 | Docs drift: "seven tools" (actual nine) in `REUSE_POLICY.md:28`, `RESEARCH_EXTENSIONS.md:14`; `CLAUDE.md` step 6 and `README.md` say to add MCP tools by hand in `mcp_server.py`; README sections after *License* | see files | [#25](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/25) |
 | G16 | 17 roadmap issues open, none closed; plans grow faster than code | issues #2–#18 | rule 1 below |
 | G17 | Version `0.2.0`, no CHANGELOG; `mypy --strict` on `aiops/core` + `registry.py` reports 11 errors; no `ruff`/`pytest-cov` in `dev` extra | `pyproject.toml` | #4 |
 
