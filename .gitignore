@@ -11,3 +11,6 @@ cvs/
 data/
 briefs/
 .env
+
+# Local agent notes (not published)
+CLAUDE.md

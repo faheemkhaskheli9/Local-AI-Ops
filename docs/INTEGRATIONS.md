@@ -119,7 +119,7 @@ Native function calling still consumes API tokens for the model's decisions and 
 - **Python-first batch pipelines:** import `aiops.text.ops` and `aiops.jobs.pipeline` to run filtering, dedupe and scoring before involving an LLM.
 - **Shell/CLI tool use:** Claude Code, Codex and local developer agents can call `aiops docs totext`, `aiops jobs run` and `aiops yt chapters` with no MCP dependency.
 - **Automation and CI:** use cron, Task Scheduler, GitHub Actions or n8n to generate compact report files on a schedule; AI reads only the final shortlist.
-- **Skills and instructions:** put predictable workflows in `AGENTS.md` and `CLAUDE.md`. These are guidance, not executable tools or a replacement for MCP.
+- **Skills and instructions:** put predictable workflows in `AGENTS.md`. These are guidance, not executable tools or a replacement for MCP.
 - **REST/OpenAPI:** only needed for legacy GPT Actions, generic HTTP clients and webhooks. Prefer a thin authenticated adapter over the same Python core, not another copy of the business logic.
 - **OAuth-secured remote MCP:** suitable when you want one service for ChatGPT and Claude across devices. Run expensive tasks as jobs and return compact job IDs/results.
 

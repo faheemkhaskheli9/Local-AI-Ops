@@ -107,7 +107,7 @@ See [docs/ROADMAP.md](docs/ROADMAP.md) for the prioritized plan and linked GitHu
 
 ## Add a new tool
 
-See [CLAUDE.md](CLAUDE.md). In short: one module per area, a pure function, a test, a CLI command, and an MCP tool if Claude should call it.
+See [AGENTS.md](AGENTS.md). In short: one module per area, a pure function, a test, a CLI command, and an MCP tool if an agent should call it.
 
 ## Privacy
 

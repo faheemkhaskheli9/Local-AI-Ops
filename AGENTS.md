@@ -14,7 +14,24 @@ Prefer deterministic Python tools over LLM inference whenever practical. This pr
 - Keep changes small and focused; extend existing pure functions instead of duplicating business logic in MCP and CLI.
 - Add tests for code changes and run `pytest`. Avoid network, GPU, heavy optional dependencies in core tests.
 
-Integration setup, supported surfaces and security caveats: [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md). For project structure see [CLAUDE.md](CLAUDE.md).
+Integration setup, supported surfaces and security caveats: [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md). To add a tool, see "Adding a tool" below.
+
+## Adding a tool
+
+1. Put a pure function in the right module (`aiops/<area>/`). Create a new area folder with `__init__.py` if none fits.
+2. Make it deterministic: no randomness, no time-dependent output, stable sort orders, explicit tie-breaks.
+3. Heavy dependencies are optional: import them inside the function and add them to an extra in `pyproject.toml`.
+4. If it calls a model, go through `aiops.core.llm` (temperature 0, seed, cache), or wrap it with `@cached`.
+5. Add a test in `tests/` that runs without network, GPU or optional extras.
+6. Add a CLI command in `aiops/cli.py`, and an MCP tool in `aiops/mcp_server.py` if an agent should call it.
+7. Add a row to the table in `README.md`.
+
+## Conventions
+
+- Python 3.10+, standard library first, type hints.
+- If you do the same mechanical task a second time, suggest adding it here as a tool.
+- Never commit personal data: CVs, configs, databases, keys. See `.gitignore`.
+- Run `pytest` before committing.
 
 ## Reuse first
 
