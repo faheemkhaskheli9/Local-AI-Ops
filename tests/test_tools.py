@@ -51,6 +51,19 @@ def test_html_and_csv():
     assert csv_to_text("a,b\n1,2\n3,4", max_rows=1).endswith("1 more rows")
 
 
+
+def test_html_keeps_form_and_header_content():
+    page = ("<html><body><form id='aspnetForm'><header><h1>Job title</h1>"
+            "<nav>menu</nav></header><p>Main text</p></form></body></html>")
+    t = html_to_text(page)
+    assert "# Job title" in t and "Main text" in t and "menu" not in t
+
+
+def test_html_recovers_from_unclosed_skip_tag():
+    t = html_to_text("<div><nav>menu</div><p>After</p><p>a<br>b</p>")
+    assert "menu" not in t and "After" in t and "a\nb" in t
+    assert html_to_text("<p>x</p></nav></span><p>y</p>") == "x\n\ny"
+
 def test_to_text_files(tmp_path):
     p = tmp_path / "d.json"
     p.write_text(json.dumps({"k": [1, 2]}))

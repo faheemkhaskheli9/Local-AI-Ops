@@ -12,8 +12,11 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
-SKIP_TAGS = {"script", "style", "noscript", "nav", "footer", "header", "svg", "form"}
-BLOCK_TAGS = {"p", "div", "br", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6",
+# Never skip wrappers that may hold the main content (form, header, main).
+SKIP_TAGS = {"script", "style", "noscript", "nav", "footer", "svg"}
+VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+             "meta", "source", "track", "wbr"}
+BLOCK_TAGS = {"p", "div", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6",
               "section", "article", "ul", "ol", "table", "pre", "blockquote"}
 
 
@@ -21,22 +24,37 @@ class _HTMLText(HTMLParser):
     def __init__(self):
         super().__init__()
         self.parts: list[str] = []
-        self.skip = 0
+        self.open: list[str] = []  # every open element, to recover from unclosed tags
+        self.skipped: list[int] = []  # depths in self.open where skipped elements start
+
+    @property
+    def skip(self) -> bool:
+        return bool(self.skipped)
 
     def handle_starttag(self, tag, attrs):
+        if tag in VOID_TAGS:
+            if tag == "br":
+                self.parts.append("\n")
+            return
         if tag in SKIP_TAGS:
-            self.skip += 1
+            self.skipped.append(len(self.open))
         elif tag in BLOCK_TAGS:
             self.parts.append("\n")
+        self.open.append(tag)
         if tag == "li" and not self.skip:
             self.parts.append("- ")
         if tag in {"h1", "h2", "h3"} and not self.skip:
             self.parts.append("#" * int(tag[1]) + " ")
 
     def handle_endtag(self, tag):
-        if tag in SKIP_TAGS and self.skip:
-            self.skip -= 1
-        elif tag in BLOCK_TAGS:
+        if tag in VOID_TAGS or tag not in self.open:
+            return  # stray end tag
+        # Close this element and any unclosed children inside it.
+        depth = len(self.open) - 1 - self.open[::-1].index(tag)
+        del self.open[depth:]
+        while self.skipped and self.skipped[-1] >= depth:
+            self.skipped.pop()
+        if tag in BLOCK_TAGS and tag not in SKIP_TAGS:
             self.parts.append("\n")
 
     def handle_data(self, data):
