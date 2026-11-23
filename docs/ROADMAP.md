@@ -160,7 +160,6 @@ Targets are set **after** v0.3 produces baselines, never before.
 
 1. #2: route MCP through `dispatch` (G1) and add an MCP smoke test.
 2. #3: validate `max_tokens` and return structured errors (G3, G4).
-3. Fix [#23](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/23) (HTML `<form>` bug) and [#24](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/24) (dead cache cleanup).
-4. Widen CI triggers to all paths (cheap first step of #4).
+3. Widen CI triggers to all paths (cheap first step of #4).
 
 System design: [ARCHITECTURE.md](ARCHITECTURE.md).
