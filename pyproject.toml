@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,8 +8,13 @@ version = "0.2.0"
 description = "Local AI Ops: deterministic Python tools and local models that do the repeatable work, so LLM tokens go only to judgment and writing."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = ["pyyaml>=6"]
+
+[project.urls]
+Homepage = "https://github.com/faheemkhaskheli9/Local-AI-Ops"
+Issues = "https://github.com/faheemkhaskheli9/Local-AI-Ops/issues"
 
 [project.optional-dependencies]
 docs = ["pypdf>=4", "python-docx>=1"]
