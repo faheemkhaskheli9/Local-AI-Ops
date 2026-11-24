@@ -53,7 +53,7 @@ Strengths: ~1.8k lines in `aiops/`, 40 offline tests passing, registry with stri
 
 | # | Gap | Evidence | Issue |
 |---|---|---|---|
-| G12 | CI runs only on KB/registry-catalog paths, Python 3.11 only; changes to `registry.py`, `core/`, `text/`, `docs/`, `jobs/`, `youtube/`, `pyproject.toml` never trigger it | `.github/workflows/kb-validation.yml` | #4 |
+| G12 | CI runs on Python 3.11 only, with no package build or install smoke test | `.github/workflows/tests.yml` | #4 |
 | G13 | No tests for `mcp_server.build()`, `llm` (mocked), CLI `llm`/`yt` paths | `tests/` | #2, #4 |
 | G14 | CLI is hand-written; `aiops docs totext` does not compact by default while MCP `file_to_text` compacts to 4,000 tokens | `aiops/cli.py:81-82` | #2 |
 | G15 | Docs drift: "seven tools" (actual nine) in `REUSE_POLICY.md:28`, `RESEARCH_EXTENSIONS.md:14`; `CLAUDE.md` step 6 and `README.md` say to add MCP tools by hand in `mcp_server.py`; README sections after *License* | see files | [#25](https://github.com/faheemkhaskheli9/Local-AI-Ops/issues/25) |
@@ -158,8 +158,7 @@ Targets are set **after** v0.3 produces baselines, never before.
 
 ## 7. Immediate next actions
 
-1. #2: route MCP through `dispatch` (G1) and add an MCP smoke test.
-2. #3: validate `max_tokens` and return structured errors (G3, G4).
-3. Widen CI triggers to all paths (cheap first step of #4).
+1. #3: validate `max_tokens` and return structured errors (G3, G4).
+2. #4: Python 3.10–3.13 matrix, golden tests, `ruff` and `pytest-cov` (CI triggers already cover all paths).
 
 System design: [ARCHITECTURE.md](ARCHITECTURE.md).

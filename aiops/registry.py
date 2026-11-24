@@ -123,7 +123,50 @@ def get_tool(name: str) -> ToolSpec:
     try:
         return _TOOLS[name]
     except KeyError as exc:
-        raise ValueError(f"Unknown tool: {name}") from exc
+        known = ", ".join(sorted(_TOOLS))
+        raise ValueError(f"Unknown tool: {name}. Known tools: {known}") from exc
+
+
+def _type_name(annotation: Any) -> str:
+    schema = _schema(annotation)
+    if "anyOf" in schema:
+        return " or ".join(_type_name(item) for item in get_args(annotation))
+    if schema["type"] == "array":
+        return f"array of {_type_name(get_args(annotation)[0] if get_args(annotation) else str)}"
+    return schema["type"]
+
+
+def _json_type(value: Any) -> str:
+    for cls, kind in ((bool, "boolean"), (int, "integer"), (float, "number"),
+                      (str, "string"), (list, "array"), (dict, "object")):
+        if isinstance(value, cls):
+            return kind
+    return "null" if value is None else type(value).__name__
+
+
+def bind(name: str, arguments: dict[str, Any], *,
+         remote: bool = False) -> tuple[ToolSpec, dict[str, Any]]:
+    """Check a call without running it; return the tool and its bound arguments.
+
+    Raises ValueError (unknown tool), PermissionError (remote use not allowed)
+    or TypeError (bad arguments), with a message the caller can act on.
+    """
+    spec = get_tool(name)
+    if remote and not spec.remote:
+        raise PermissionError(f"Tool is not available remotely: {name}")
+    if not isinstance(arguments, dict):
+        raise TypeError(f"{name}: arguments must be a JSON object")
+    signature = inspect.signature(spec.function)
+    try:
+        bound = signature.bind(**arguments)
+    except TypeError as exc:
+        raise TypeError(f"{name}: {exc}") from exc
+    annotations = get_type_hints(spec.function)
+    for field, value in bound.arguments.items():
+        if not _valid(value, annotations[field]):
+            raise TypeError(f"{name}: argument '{field}' must be "
+                            f"{_type_name(annotations[field])}, got {_json_type(value)}")
+    return spec, bound.arguments
 
 
 def dispatch(name: str, arguments: dict[str, Any], *, remote: bool = False) -> Any:
@@ -132,15 +175,5 @@ def dispatch(name: str, arguments: dict[str, Any], *, remote: bool = False) -> A
     For a future HTTP adapter, remote=True rejects all tools not explicitly
     opted into remote execution. Never expose the stdio catalog wholesale.
     """
-    spec = get_tool(name)
-    if remote and not spec.remote:
-        raise PermissionError(f"Tool is not available remotely: {name}")
-    if not isinstance(arguments, dict):
-        raise TypeError("Tool arguments must be a JSON object")
-    signature = inspect.signature(spec.function)
-    bound = signature.bind(**arguments)
-    annotations = get_type_hints(spec.function)
-    for field, value in bound.arguments.items():
-        if not _valid(value, annotations[field]):
-            raise TypeError(f"Invalid argument type: {field}")
-    return spec.function(**bound.arguments)
+    spec, bound = bind(name, arguments, remote=remote)
+    return spec.function(**bound)

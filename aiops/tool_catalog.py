@@ -33,19 +33,32 @@ def text_diff(before: str, after: str) -> str:
     return diff(before, after)
 
 
-@tool(name="job_check")
+@tool(name="job_check", version=2)
 def job_check(title: str, company: str, location: str, description: str,
-              config_path: str = "config.yaml") -> dict:
-    """Apply existing job filters, CV selection and fit scoring rules."""
+              config_path: str | None = None) -> dict:
+    """Apply existing job filters, CV selection and fit scoring rules (no LLM call).
+
+    config_path: a jobs config.yaml; if omitted, AIOPS_JOBS_CONFIG, else built-in defaults.
+    """
+    import os
+    from pathlib import Path
+
     from aiops.jobs.config import load_config
     from aiops.jobs.models import Job
-    from aiops.jobs.pipeline import process
+    from aiops.jobs.pipeline import load_lists, process
+    path = config_path or os.environ.get("AIOPS_JOBS_CONFIG")
+    if path and not Path(path).is_file():
+        raise FileNotFoundError(f"Jobs config not found: {path}")
+    cfg = load_config(path)
+    cfg["ollama"]["enabled"] = False  # read tier: the LLM extract is not returned anyway
+    skip, sponsors = load_lists(cfg)
     job = process(Job(url=f"mcp://{company}/{title}", title=title,
                       company=company, location=location,
-                      description=description), load_config(config_path))
+                      description=description), cfg, skip=skip, sponsors=sponsors)
     return {"status": job.status, "reasons": job.reasons,
             "cv": job.cv_version, "score": job.score,
-            "matched": job.flags.get("matched_skills")}
+            "matched": job.flags.get("matched_skills"),
+            "config": path or "defaults"}
 
 
 @tool(name="srt_to_chapters")
@@ -72,7 +85,7 @@ def kb_plan(task: str, include_private: bool = False) -> dict:
     return route(task, include_private=include_private)
 
 
-@tool(name="kb_validate")
+@tool(name="kb_validate", version=2)
 def kb_validate(task: str, evidence: list[dict],
                 include_private: bool = False,
                 as_of: str | None = None) -> dict:

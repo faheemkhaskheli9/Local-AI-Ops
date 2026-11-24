@@ -57,6 +57,8 @@ With the MCP server, Claude calls a tool like `file_to_text` instead of reading 
 
 Tools: `file_to_text`, `compact_text`, `count_tokens`, `text_diff`, `job_check`, `srt_to_chapters`, `local_llm`, `kb_plan`, `kb_validate`.
 
+Every MCP call is checked by the same registry as `dispatch`: wrong types, unknown arguments and unknown tools are rejected before the tool runs. `job_check` uses built-in defaults unless you pass `config_path` or set `AIOPS_JOBS_CONFIG` in the MCP server's environment.
+
 ## Examples
 
 ```bash
@@ -82,6 +84,7 @@ aiops jobs list                      # shortlist, best first
 aiops jobs list --status filtered_out
 aiops jobs brief                     # short prompts for Claude in briefs/
 aiops jobs sync                      # push shortlist to Notion (NOTION_TOKEN)
+aiops jobs check job.txt --title "ML Engineer" --company Acme --location Amsterdam  # one job, not stored
 ```
 
 Optional data files: `data/target_companies.csv` (`company,status` — `Skip`/`Applied` are filtered out) and `data/ind_sponsors.csv` (`name`) from the IND [public register of recognised sponsors](https://ind.nl/en/public-register-recognised-sponsors). LinkedIn forbids scraping, so keep volumes low or feed links in with `aiops jobs add`.

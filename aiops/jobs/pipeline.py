@@ -25,6 +25,12 @@ def load_skip_companies(cfg: dict) -> set[str]:
         }
 
 
+def load_lists(cfg: dict) -> tuple[set[str], set[str] | None]:
+    """Skip-company and IND sponsor lists named in the config (None: no sponsor list)."""
+    sponsors = load_names(cfg["filters"].get("ind_sponsors_csv"), "name") or None
+    return load_skip_companies(cfg), sponsors
+
+
 def process(job: Job, cfg: dict, *, skip: set[str] | None = None,
             sponsors: set[str] | None = None) -> Job:
     apply_filters(job, cfg, skip_companies=skip, ind_sponsors=sponsors)
@@ -48,8 +54,7 @@ def process(job: Job, cfg: dict, *, skip: set[str] | None = None,
 
 
 def run(store: Store, cfg: dict) -> dict[str, int]:
-    skip = load_skip_companies(cfg)
-    sponsors = load_names(cfg["filters"].get("ind_sponsors_csv"), "name") or None
+    skip, sponsors = load_lists(cfg)
     counts: dict[str, int] = {}
     for job in store.by_status("new"):
         process(job, cfg, skip=skip, sponsors=sponsors)

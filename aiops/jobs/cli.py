@@ -1,7 +1,8 @@
-"""aiops jobs: collect | add | run | list | brief | sync"""
+"""aiops jobs: collect | add | run | list | brief | sync | check"""
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -27,8 +28,23 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("--out", default="briefs")
     b.add_argument("--task", default="cover letter")
     sub.add_parser("sync", help="push shortlisted jobs to Notion")
+    ck = sub.add_parser("check", help="check one job without storing it (the job_check tool)")
+    ck.add_argument("description", help="file with the job description, or - for stdin")
+    for field in ("title", "company", "location"):
+        ck.add_argument(f"--{field}", required=True)
 
     args = ap.parse_args(argv)
+    if args.cmd == "check":
+        from aiops.registry import dispatch
+
+        text = sys.stdin.read() if args.description == "-" else \
+            Path(args.description).read_text(encoding="utf-8")
+        result = dispatch("job_check", {
+            "title": args.title, "company": args.company, "location": args.location,
+            "description": text,
+            "config_path": args.config if Path(args.config).is_file() else None})
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
     cfg = load_config(args.config)
     store = Store(cfg["db_path"])
 

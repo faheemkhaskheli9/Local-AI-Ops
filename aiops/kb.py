@@ -165,6 +165,7 @@ def validate(task: str, evidence: list[dict], *, include_private: bool = False,
         "warnings": warnings,
         "candidate_citations": accepted,
         "verified_retrieval": False,
+        "as_of": today.isoformat(),
         "note": "Local validation checks supplied metadata, not GitHub access, "
                 "document accuracy, or the validity of user-provided claims.",
     }
