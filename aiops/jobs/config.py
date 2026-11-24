@@ -68,6 +68,8 @@ DEFAULTS: dict = {
 def _merge(base: dict, override: dict) -> dict:
     out = copy.deepcopy(base)
     for k, v in (override or {}).items():
+        if v is None and isinstance(out.get(k), dict):
+            continue  # a bare `section:` line keeps the defaults
         if isinstance(v, dict) and isinstance(out.get(k), dict):
             out[k] = _merge(out[k], v)
         else:

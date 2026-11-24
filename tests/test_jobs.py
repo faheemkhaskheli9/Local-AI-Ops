@@ -95,6 +95,21 @@ def test_trim_keeps_text_without_headings():
     assert trim_description("Just one paragraph.") == "Just one paragraph."
 
 
+def test_bare_config_section_keeps_defaults(tmp_path):
+    p = tmp_path / "config.yaml"
+    p.write_text("ollama:\nnotion:\n")
+    cfg = load_config(p)
+    assert cfg["ollama"]["model"] and cfg["notion"]["enabled"] is False
+
+
+def test_extract_max_chars_is_keyword_only():
+    import pytest
+    from aiops.jobs import extract as ex
+
+    with pytest.raises(TypeError):
+        ex.extract("text", CFG, None)
+
+
 def test_extract_uses_configured_ollama_host(monkeypatch, tmp_path):
     from aiops.core import llm
     from aiops.core.cache import Cache

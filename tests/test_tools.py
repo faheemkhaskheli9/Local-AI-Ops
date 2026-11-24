@@ -64,6 +64,36 @@ def test_html_recovers_from_unclosed_skip_tag():
     assert "menu" not in t and "After" in t and "a\nb" in t
     assert html_to_text("<p>x</p></nav></span><p>y</p>") == "x\n\ny"
 
+
+def test_html_unclosed_nav_without_wrapper_keeps_page():
+    page = "<html><body><nav><a>Home</a><main><h1>Title</h1><p>Body</p></main></body></html>"
+    t = html_to_text(page)
+    assert "# Title" in t and "Body" in t and "Home" not in t
+    assert "Body" in html_to_text("<nav><a>Home</a><h1>Title</h1><p>Body</p>")
+    assert "Body" in html_to_text("<body><nav><a>Home</a><p>Body</p></body>")
+
+
+def test_html_loose_end_tags_do_not_end_nav():
+    assert html_to_text("<p>Intro<nav>Home</p>About</nav>after") == "Intro\n\nafter"
+    assert html_to_text("<ul><li>Item<nav>Home</li>Login</nav></ul>after") == "- Item\n\nafter"
+
+
+def test_html_stray_block_end_tag_breaks_line():
+    assert html_to_text("x</p>y") == "x\ny"
+
+
+def test_html_drops_select_options_and_keeps_trailing_text():
+    form = "<form><p>Apply</p><select><option>Afghanistan<option>Albania</select></form>"
+    assert html_to_text(form) == "Apply"
+    assert html_to_text("<p>Intro</p>We do R&D") == "Intro\nWe do R&D"
+
+
+def test_html_unclosed_tags_do_not_grow_stack():
+    from aiops.docs.extract import _HTMLText
+    p = _HTMLText()
+    p.feed("<p>para <b>bold</b> text<li>x<option>y<td>z<param>\n" * 2000)
+    assert len(p.open) < 10
+
 def test_to_text_files(tmp_path):
     p = tmp_path / "d.json"
     p.write_text(json.dumps({"k": [1, 2]}))
